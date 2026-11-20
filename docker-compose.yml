@@ -1,0 +1,36 @@
+services:
+  rag-backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: crop-disease-rag-server
+    restart: unless-stopped
+    ports:
+      - "${SERVER_PORT:-8000}:8000"
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8000
+      - DEBUG=True
+      - API_V1_STR=/api/v1
+      - CHROMA_PERSIST_DIR=/app/chroma_db
+      - CHROMA_COLLECTION_NAME=crop_disease_treatments
+      - EMBEDDING_MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
+      - LLM_PROVIDER=${LLM_PROVIDER:-google_gemini}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - LLM_MODEL=${LLM_MODEL:-gemini-1.5-flash}
+    volumes:
+      - chroma_data:/app/chroma_db
+      - ./data/knowledge_base:/app/knowledge_base:ro
+      - ./data/sqlite:/app/data/sqlite:ro
+      - ./test:/app/test:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  chroma_data:
+    driver: local

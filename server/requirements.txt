@@ -1,0 +1,23 @@
+# FastAPI Framework & ASGI Server
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.1
+pydantic>=2.7.4
+pydantic-settings>=2.3.4
+
+# Vector DB, AI Inference & Scientific Computing
+chromadb>=1.0.0
+numpy>=1.26.0
+pillow>=10.0.0
+onnxruntime>=1.18.0
+
+# RAG & LLM Orchestration
+langchain>=0.2.6
+langchain-community>=0.2.6
+langchain-google-genai>=1.0.6
+langchain-openai>=0.1.13
+
+# Utility & Network
+python-multipart>=0.0.9
+requests>=2.32.3
+python-dotenv>=1.0.1
+httpx>=0.27.0

@@ -1,0 +1,38 @@
+{
+  "appId": "com.cropdisease.edgeai",
+  "productName": "CropDisease EdgeAI",
+  "directories": {
+    "output": "release"
+  },
+  "files": [
+    "dist/**/*",
+    "node_modules/**/*",
+    "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "../data/sqlite",
+      "to": "data/sqlite",
+      "filter": ["*.db", "*.sql"]
+    },
+    {
+      "from": "../test",
+      "to": "models",
+      "filter": ["*.onnx", "*.onnx.data"]
+    }
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      }
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true
+  }
+}
+

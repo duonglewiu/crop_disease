@@ -1,0 +1,4 @@
+# Giữ thư mục weights trên Git.
+# Các file trọng số mô hình lớn (*.pth, *.onnx.data > 100MB) được bỏ qua bởi .gitignore
+# Khuyến nghị lưu trữ file trọng số trên Google Drive, HuggingFace hoặc GitHub Releases.
+

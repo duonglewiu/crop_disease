@@ -1,0 +1,115 @@
+{
+  "info": {
+    "_postman_id": "a935b1b5-9675-46ba-9080-crop-disease-rag",
+    "name": "Crop Disease Edge AI - E2E & RAG API Collection",
+    "description": "Bộ sưu tập kiểm thử API cho Server FastAPI (Bao gồm cả RAG Endpoint Tuần 5 và Full End-to-End Image Diagnosis Tuần 6-7)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "health"]
+        },
+        "description": "Kiểm tra tình trạng hoạt động của FastAPI server."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Root Welcome",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3. Sinh phác đồ điều trị RAG (POST /api/v1/rag/treatment)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"crop_name\": \"Tomato\",\n  \"disease_name\": \"Late blight\",\n  \"severity_percentage\": 34.5,\n  \"user_notes\": \"Trồng trong nhà màng, nồm ẩm kéo dài 3 ngày liên tiếp\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/rag/treatment",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "rag", "treatment"]
+        },
+        "description": "Gửi thông tin chẩn đoán từ Edge AI lên Server RAG để truy xuất tài liệu ChromaDB và sinh phác đồ can thiệp chuyên môn."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Chẩn đoán ảnh lá cây End-to-End 10 bước (POST /api/v1/diagnose)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": [],
+              "description": "Chọn file ảnh lá cây (.jpg, .png, .webp)"
+            },
+            {
+              "key": "crop_filter",
+              "value": "Potato",
+              "type": "text",
+              "description": "Loài cây do người dùng chọn (Potato, Tomato, Apple, Corn, Grape...)"
+            },
+            {
+              "key": "network_mode",
+              "value": "hybrid",
+              "type": "text",
+              "description": "Chế độ định tuyến: hybrid | online | offline"
+            },
+            {
+              "key": "blur_threshold",
+              "value": "100.0",
+              "type": "text",
+              "description": "Ngưỡng phương sai Laplacian tối thiểu"
+            },
+            {
+              "key": "user_notes",
+              "value": "Thời tiết mưa ẩm kéo dài",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/diagnose",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "diagnose"]
+        },
+        "description": "Endpoint End-to-End (Phase 5 & Phase 6) nhận trực tiếp file ảnh lá cây: Kiểm tra mờ Laplacian -> SwinV2 ONNX + TTA + Crop Filter -> U-Net Severity % + Mask Overlay -> Hybrid Router (SQLite + ChromaDB RAG)."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ]
+}
